@@ -69,10 +69,8 @@ fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double = sqrt(s
  * Определить длину того же отрезка в метрах (в данном случае 18.98).
  * 1 сажень = 3 аршина = 48 вершков, 1 вершок = 4.445 см.
  */
-fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double {
-    val vershki = (sagenes * 3 * 16) + (arshins * 16) + vershoks
-    return (vershki * 4.445) / 100
-}
+fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double =
+    (sagenes * 3 * 16 + arshins * 16 + vershoks) * 4.445 / 100
 
 /**
  * Задача 3
@@ -80,7 +78,8 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double {
  * Пользователь задает угол в градусах, минутах и секундах (например, 36 градусов 14 минут 35 секунд).
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
-fun angleInRadian(deg: Int, min: Int, sec: Int): Double = ((deg + (min.toDouble() / 60) + (sec.toDouble() / 3600)) / 180) * PI
+fun angleInRadian(deg: Int, min: Int, sec: Int): Double =
+    (deg + min / 60.0 + sec / 3600.0) / 180 * PI
 
 
 /**
@@ -90,11 +89,9 @@ fun angleInRadian(deg: Int, min: Int, sec: Int): Double = ((deg + (min.toDouble(
  * прибыл на станцию назначения в h2 часов m2 минут того же дня (например в 13:01).
  * Определите время поезда в пути в минутах (в данном случае 216).
  */
-fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int): Int {
-    val minutesFromDepart = (hoursDepart * 60) + minutesDepart
-    val minutesFromArrive = (hoursArrive * 60) + minutesArrive
-    return minutesFromArrive - minutesFromDepart
-}
+fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int): Int =
+    hoursArrive * 60 + minutesArrive - hoursDepart * 60 - minutesDepart
+
 
 
 /**
@@ -105,4 +102,4 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
 fun accountInThreeYears(initial: Int, percent: Int): Double =
-    initial.toDouble() * (1 + (percent / 100)).toDouble().pow(3)
+    initial * (1 + percent / 100.0).pow(3)
