@@ -1,5 +1,6 @@
 package lessons.task1
 
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
 
@@ -125,7 +126,12 @@ fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int = TODO()
+): Int = when {
+    (kingX == rookX || kingY == rookY) && (abs(kingX - bishopX) == abs(kingY - bishopY)) -> 3
+    kingX == rookX || kingY == rookY -> 1
+    abs(kingX - bishopX) == abs(kingY - bishopY) -> 2
+    else -> 0
+}
 
 
 /**
@@ -136,7 +142,32 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    if (a + c < b || a + b < c || b + c < a) return -1
+    val maxSide = maxOf(a, b, c)
+    var averageSide1 = 0.0
+    var averageSide2 = 0.0
+    when (maxSide) {
+        a -> {
+            averageSide1 = b
+            averageSide2 = c
+        }
+        b -> {
+            averageSide1 = a
+            averageSide2 = c
+        }
+        else -> {
+            averageSide1 = a
+            averageSide2 = b
+        }
+    }
+    return when {
+        sqr(maxSide) > sqr(averageSide1) + sqr(averageSide2) -> 2
+        sqr(maxSide) == sqr(averageSide1) + sqr(averageSide2) -> 1
+        else -> 0
+    }
+
+}
 
 
 /**
@@ -145,7 +176,13 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Четырехзначное число назовем счастливым, если сумма первых двух ее цифр равна сумме двух последних.
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
-fun isNumberHappy(number: Int): Boolean = TODO()
+fun isNumberHappy(number: Int): Boolean {
+    val firstDigit = number / 1000
+    val secondDigit = number / 100 % 10
+    val thirdDigit = number / 10 % 10
+    val fourthDigit = number % 10
+    return firstDigit + secondDigit == thirdDigit + fourthDigit
+}
 
 
 /**
