@@ -162,15 +162,25 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * Использовать функции стандартной библиотеки, напрямую и полностью решающие данную задачу
  * (например, str.toInt(base)), запрещается.
  */
+
+
+/**
+ * 1. Таблица символов
+ * 2. Вместо reversed индексы
+ */
 fun decimalFromString(str: String, base: Int): Int {
-    val list = listOf('a', 'b', 'c', 'd', 'e', 'f')
-    val test = mutableListOf<Char>()
-    val reverse = str.reversed()
+    var power = str.length - 1
     var result = 0
-    for (letter in reverse) {
-        test.add(letter)
-        result = (10 + list.indexOf(test[0]) * (base.toDouble()).pow(test.indexOf(test[0]))).toInt()
+
+    for (number in str) {
+        val intNumber = number.toInt()
+        result += when {
+            intNumber <= 57 -> (intNumber - 48) * base.toDouble().pow(power).toInt()
+            else -> (intNumber - 87) * base.toDouble().pow(power).toInt()
+        }
+        power -= 1
     }
+    return  result
 
 }
 
@@ -181,6 +191,23 @@ fun decimalFromString(str: String, base: Int): Int {
  * Записать заданное натуральное число 1..999999 прописью по-русски.
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
+ */
+
+fun digitCount(int: Int): Int {
+    var count = 1
+    var n = int
+    while (n > 9) {
+        n /= 10
+        ++count
+    }
+    return count
+}
+
+
+/**
+ * 1.  mutableListOf<String> to stringbuilder
+ * 2.  Меньше конвертаций
+ * 3*. Работай
  */
 fun russian(n: Int): String {
     val numbers = listOf<List<String>>(listOf<String>("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"),
@@ -212,7 +239,10 @@ fun russian(n: Int): String {
         }
         when {
             (intDigit == 0) || (isNumberComplex) -> continue
-            listIndex % 3 == 1 && intDigit == 1 && strN[index + 1].toInt() != 0 -> result.add(numbers[3][strN[index + 1].toInt() - 1])
+            listIndex % 3 == 1 && intDigit == 1 && strN[index + 1].toInt() != 0 -> {
+                result.add(numbers[3][strN[index + 1].toInt() - 1])
+                isNumberComplex = true
+            }
             else -> result.add(numbers[listIndex % 3][intDigit - 1])
         }
     }
@@ -419,18 +449,7 @@ fun timeSecondsToStr(seconds: Int): String {
  * Пример: консольный ввод
  */
 fun main() {
-    println("Введите время в формате ЧЧ:ММ:СС")
-    val line = readLine()
-    if (line != null) {
-        val seconds = timeStrToSeconds(line)
-        if (seconds == -1) {
-            println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
-        } else {
-            println("Прошло секунд с начала суток: $seconds")
-        }
-    } else {
-        println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
-    }
+    println('a'.toInt())
 }
 
 
@@ -445,13 +464,18 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
+
+
+/**
+ * 1. IndexOf вместо мапа
+ */
 fun dateStrToDigit(str: String): String {
-    val months = mapOf("января" to 1, "февраля" to 2, "марта" to 3, "апреля" to 4, "мая" to 5,
-        "июня" to 6, "июля" to 7, "августа" to 8, "сентября" to 9, "октября" to 10, "ноября" to 11, "декабря" to 12,)
+    val months = listOf("января", "февраля", "марта", "апреля", "мая",
+        "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
 
     val dateList = str.split(" ")
     return when {
-        dateList[1] in months -> String.format("%02d.%02d.%02d", dateList[0], months[dateList[1]], dateList[2])
+        dateList[1] in months -> String.format("%02d.%02d.%02d", dateList[0], (months.indexOf(dateList[1]) + 1), dateList[2])
         else -> ""
     }
 }
@@ -467,13 +491,18 @@ fun dateStrToDigit(str: String): String {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
+
+
+/**
+ * 1. Вместо map нужно лист
+ */
 fun dateDigitToStr(digital: String): String {
-    val months = mapOf("01" to "января" , "02" to "февраля", "03" to "марта", "04" to "апреля", "05" to "мая",
-        "06" to "июня", "07" to "июля", "08" to "августа", "09" to "сентября", "10" to "октября", "11" to "ноября", "12" to "декабря")
+    val months = listOf("января", "февраля", "марта", "апреля", "мая",
+        "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
 
     val dateList = digital.split(".")
     return when {
-        dateList[1] in months -> String.format("%02d %s %02d", dateList[0], months[dateList[1]], dateList[2])
+        dateList[1] in months -> String.format("%02d %s %02d", dateList[0], months[dateList[1].toInt() - 1], dateList[2])
         else -> ""
     }
 }
@@ -487,7 +516,17 @@ fun dateDigitToStr(digital: String): String {
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
+fun firstDuplicateIndex(str: String): Int {
+    var firstIndex = 1
+    while (str.length >= firstIndex) {
+        val secondIndex = firstIndex + 1
+        when {
+            str[firstIndex] == str[secondIndex] -> return firstIndex
+            else -> firstIndex += 1
+        }
+    }
+    return  -1
+}
 
 /*
   НЕМНОГО ПРО ВЕЩЕСТВЕННЫЕ ЧИСЛА
