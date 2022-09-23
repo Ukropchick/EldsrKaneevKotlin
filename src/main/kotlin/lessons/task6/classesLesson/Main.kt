@@ -36,6 +36,8 @@ fun main() {
 
     println(Rectangle(3, 4))
 
+    val a = 100000000000000000
+
 
 }
 
