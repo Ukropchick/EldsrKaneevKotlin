@@ -21,7 +21,8 @@ internal class UnsignedBigIntegerTest {
     }
 
     @Test
-    fun getList() {
+    fun testToString() {
+        assertEquals("1234567890", UnsignedBigInteger("1234567890").toString())
         assertEquals("1234567890", UnsignedBigInteger("1234567890").toString())
         assertEquals("1234567890123456789012345678901234567890", UnsignedBigInteger("1234567890123456789012345678901234567890").toString())
         assertEquals("12345", UnsignedBigInteger("12345").toString())
@@ -29,6 +30,7 @@ internal class UnsignedBigIntegerTest {
         assertEquals("0", UnsignedBigInteger(0).toString())
         assertEquals("1234567890", UnsignedBigInteger(1234567890).toString())
         assertEquals("1000000008", UnsignedBigInteger("1000000008").toString())
+        assertEquals("10000000", UnsignedBigInteger("10000000").toString())
     }
 
     @Test
@@ -52,16 +54,29 @@ internal class UnsignedBigIntegerTest {
 
     }
 
+    private fun doAddIndexedTest(toDo:(output:List<Int>, input:List<Int>) -> Unit) {
+        val digits = Random.nextInt(2, 1000)
+        val randIndex = Random.nextInt(0, digits - 1)
+        val input = mutableListOf<Int>().apply { repeat(digits) { add(999999999) } }
+        UnsignedBigInteger.apply {
+            input.addIndexed(1, randIndex)
+        }
+        val output = mutableListOf<Int>().apply {
+            add(1)
+            repeat(digits - randIndex) { add(0) }
+            repeat(randIndex) { add(999999999)}
+        }
+        println("\ninput  = ${input.reversed()},\noutput = ${output}\n\n")
+        toDo(output.toList(), input.reversed())
+    }
+
     @Test
     fun addIndexed() {
-        val ar = mutableListOf<Int>(999999999, 999999999, 999999999)
-
-        UnsignedBigInteger.apply {
-            ar.addIndexed(1, 0)
+        repeat(10000) {
+            doAddIndexedTest { output, input->
+                assertEquals(output, input)
+            }
         }
-
-        assertEquals(listOf(1, 0, 0, 0), ar.reversed())
-
     }
 
     @Test
@@ -82,14 +97,21 @@ internal class UnsignedBigIntegerTest {
         assertEquals((254 * 7689).toString(), (UnsignedBigInteger(254) * UnsignedBigInteger(7689)).toString())
         assertEquals((1 * 1).toString(), (UnsignedBigInteger(1) * UnsignedBigInteger(1)).toString())
         assertEquals((0 * 0).toString(), (UnsignedBigInteger(0) * UnsignedBigInteger(0)).toString())
-        repeat(1000000000) {
+        assertEquals(
+            "1092340304936617220000000", (
+                    UnsignedBigInteger(318248038)
+                    * UnsignedBigInteger(343235519)
+                    * UnsignedBigInteger("10000000")
+                    ).toString())
+        println("\n\nBegining Random tests!\n")
+        repeat(10000) {
             val a = Random.nextInt(0, Int.MAX_VALUE)
             val b = Random.nextInt(0, Int.MAX_VALUE)
             val c = a * b.toLong()
             val z = 10.0.pow(Random.nextInt(1,16)).toLong().toString()
             val res = StringBuilder(c.toString()).append("0".repeat(z.length - 1)).toString()
-//            println("a = $a \nb = $b \nz = $z \nres = $res \n")
-            assertEquals(c.toString(), (UnsignedBigInteger(b) * UnsignedBigInteger(a) ).toString())
+            println("a = $a \nb = $b \nz = $z \nres = $res \n")
+            assertEquals(res, (UnsignedBigInteger(b) * UnsignedBigInteger(a) * UnsignedBigInteger(z)).toString())
         }
     }
 
@@ -127,13 +149,6 @@ internal class UnsignedBigIntegerTest {
         }
     }
 
-
-
-    @Test
-    fun testToString() {
-        assertEquals("1234567890", UnsignedBigInteger(1234567890).toString())
-        assertEquals("0", UnsignedBigInteger(0).toString())
-    }
 
     @Test
     fun toInt() {
