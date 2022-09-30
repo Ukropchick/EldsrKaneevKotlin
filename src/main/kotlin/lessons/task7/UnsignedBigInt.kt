@@ -15,6 +15,12 @@ import kotlin.math.pow
  */
 
 
+fun Int.countDigits(): Int {
+    var num = this
+    var counter = 1
+    while (num > 9) { num /= 10; counter++ }
+    return counter
+}
 
 
 class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
@@ -56,14 +62,14 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
         var container = 0.0
         for (index in s.length - 1 downTo 0) {
             container += s[index].digitToInt() * 10.0.pow(counter)
-            if (counter == 8) {
+            counter++
+            if (counter == digitCount) {
                 list.add(container.toInt())
-                counter = -1
+                counter = 0
                 container = 0.0
             }
-            counter++
         }
-        if (counter != 8) {
+        if (counter in 1 until digitCount) {
             list.add(container.toInt())
         }
         list.reverse()
@@ -212,19 +218,12 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     /**
      * Преобразование в строку
      */
+
     override fun toString(): String = StringBuilder().apply {
         var isFirst = true
         list.forEach {
             if (!isFirst) {
-                var counter = 0
-                var number = it
-                if (number == 0) counter += 1 else {
-                    while (number > 0) {
-                        number /= 10
-                        counter++
-                    }
-                }
-                append("0".repeat(9 - counter))
+                append("0".repeat(digitCount - it.countDigits()))
             }
             isFirst = false
             append(it).toString() }
