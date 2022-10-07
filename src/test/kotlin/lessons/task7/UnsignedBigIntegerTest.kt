@@ -122,10 +122,36 @@ internal class UnsignedBigIntegerTest {
 
     @Test
     fun div() {
+//        assertEquals((Int.MAX_VALUE / Int.MAX_VALUE).toString(), (UnsignedBigInteger(Int.MAX_VALUE) / UnsignedBigInteger(Int.MAX_VALUE)).toString())
+//        assertFailsWith<ArithmeticException> { UnsignedBigInteger(Int.MAX_VALUE) / UnsignedBigInteger(0) }
+//        assertFailsWith<ArithmeticException> { UnsignedBigInteger(0) / UnsignedBigInteger(0) }
+//        assertEquals((0 / Int.MAX_VALUE).toString(), (UnsignedBigInteger(0) / UnsignedBigInteger(Int.MAX_VALUE)).toString())
+//        assertEquals((Int.MAX_VALUE / 1).toString(), (UnsignedBigInteger(Int.MAX_VALUE) / UnsignedBigInteger(1)).toString())
+//        assertEquals((1 / 1).toString(), (UnsignedBigInteger(1) / UnsignedBigInteger(1)).toString())
+//        assertEquals((Int.MAX_VALUE / 1).toString(), (UnsignedBigInteger(Int.MAX_VALUE) / UnsignedBigInteger(1)).toString())
+//        assertEquals((7689 / 254).toString(), (UnsignedBigInteger(7689) / UnsignedBigInteger(254)).toString())
+        repeat(1) {
+            val a = Random.nextInt(0, Int.MAX_VALUE)
+            val b = Random.nextInt(1, Int.MAX_VALUE)
+            val c = a / b
+            val z = 10.0.pow(Random.nextInt(1,16)).toLong().toString()
+            val res = StringBuilder(c.toString()).append("0".repeat(z.length - 1)).toString()
+            println("a = $a \nb = $b \nz = $z \nc = $c \nres = $res \n")
+            assertEquals(c.toString(), (UnsignedBigInteger(a) / UnsignedBigInteger(b)).toString())
+
+        }
     }
 
     @Test
     fun rem() {
+        assertEquals((Int.MAX_VALUE % Int.MAX_VALUE).toString(), (UnsignedBigInteger(Int.MAX_VALUE) % UnsignedBigInteger(Int.MAX_VALUE)).toString())
+        assertFailsWith<ArithmeticException> { UnsignedBigInteger(Int.MAX_VALUE) % UnsignedBigInteger(0) }
+        assertFailsWith<ArithmeticException> { UnsignedBigInteger(0) % UnsignedBigInteger(0) }
+        assertEquals((0 % Int.MAX_VALUE).toString(), (UnsignedBigInteger(0) % UnsignedBigInteger(Int.MAX_VALUE)).toString())
+        assertEquals((Int.MAX_VALUE % 1).toString(), (UnsignedBigInteger(Int.MAX_VALUE) % UnsignedBigInteger(1)).toString())
+        assertEquals((1 % 1).toString(), (UnsignedBigInteger(1) % UnsignedBigInteger(1)).toString())
+        assertEquals((Int.MAX_VALUE % 1).toString(), (UnsignedBigInteger(Int.MAX_VALUE) % UnsignedBigInteger(1)).toString())
+        assertEquals((7689 % 254).toString(), (UnsignedBigInteger(7689) % UnsignedBigInteger(254)).toString())
     }
 
     @Test

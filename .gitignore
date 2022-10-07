@@ -1,3 +1,5 @@
 # Project exclude paths
 /.gradle/
 /build/
+/.idea/
+/java_pid5576.hprof

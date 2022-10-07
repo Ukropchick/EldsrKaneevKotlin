@@ -1,5 +1,6 @@
 package lessons.task7
 
+import lessons.task7.UnsignedBigInteger.Companion.addIndexed
 import kotlin.math.pow
 
 /**
@@ -49,6 +50,12 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     }
 
     val list = mutableListOf<Int>()
+
+    /**
+     * Конструктор пустого BigInteger
+     */
+
+    private constructor()
 
 
 
@@ -179,14 +186,43 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
     }
 
     /**
+     * Главная функция деления
+     */
+
+    private fun mainDiv(dividend: UnsignedBigInteger, divider: UnsignedBigInteger): Pair<UnsignedBigInteger, UnsignedBigInteger> {
+        if (divider == UnsignedBigInteger(0)) throw ArithmeticException("На ноль делить нельзя!")
+
+        var res = ""
+        var container = UnsignedBigInteger()
+        var counterForContainer = 0
+        var counter = 0
+
+        while (counterForContainer < dividend.list.size) {
+            while (container < divider && counterForContainer < dividend.list.size) {
+                container.list.add(dividend.list[counterForContainer])
+                counterForContainer++
+            }
+
+            while (container >= divider) {
+                container -= divider
+                counter++
+            }
+            res += counter
+            counter = 0
+        }
+
+        return Pair(UnsignedBigInteger(res), container)
+    }
+
+    /**
      * Деление
      */
-    operator fun div(other: UnsignedBigInteger): UnsignedBigInteger = TODO()
+    operator fun div(other: UnsignedBigInteger): UnsignedBigInteger = mainDiv(this, other).first
 
     /**
      * Взятие остатка
      */
-    operator fun rem(other: UnsignedBigInteger): UnsignedBigInteger = TODO()
+    operator fun rem(other: UnsignedBigInteger): UnsignedBigInteger = mainDiv(this, other).second
 
     /**
      * Сравнение на равенство (по контракту [Any.equals])
