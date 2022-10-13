@@ -269,6 +269,17 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
      * Преобразование в целое
      * Если число не влезает в диапазон Int, бросить ArithmeticException
      */
-    fun toInt(): Int = TODO()
+    fun toInt(): Int {
+        val sizeOfList = this.list.size
+        if (sizeOfList > 2) throw ArithmeticException() else {
+            when (sizeOfList) {
+                1 -> return this.list[0]
+                2 -> {
+                    if (this.list[1] > 2 && this.list[0] > 147483647) throw ArithmeticException() else return this.list[0] * 1000000000 + this.list[1]
+                }
+            }
+        }
+        return this.list[0]
+    }
 
 }

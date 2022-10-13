@@ -81,11 +81,6 @@ internal class UnsignedBigIntegerTest {
 
     @Test
     fun times() {
-
-
-
-
-
         assertEquals(("39320205039799288420000000").toString(), (UnsignedBigInteger(1936856107) * UnsignedBigInteger(2030104606) * UnsignedBigInteger(10000000)).toString())
         assertEquals((4611686014132420609).toString(), (UnsignedBigInteger(Int.MAX_VALUE) * UnsignedBigInteger(Int.MAX_VALUE)).toString())
         assertEquals("1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
@@ -152,6 +147,20 @@ internal class UnsignedBigIntegerTest {
         assertEquals((1 % 1).toString(), (UnsignedBigInteger(1) % UnsignedBigInteger(1)).toString())
         assertEquals((Int.MAX_VALUE % 1).toString(), (UnsignedBigInteger(Int.MAX_VALUE) % UnsignedBigInteger(1)).toString())
         assertEquals((7689 % 254).toString(), (UnsignedBigInteger(7689) % UnsignedBigInteger(254)).toString())
+        assertEquals(("93248499044975392436495").toString(), (UnsignedBigInteger("2030104606172384519837456") % UnsignedBigInteger("1936856107127409127400961")).toString())
+        assertEquals(("147483647147483647147483647147483647147483647147483647147483647147483647147483647147483647147483647147483647").toString(),
+            (UnsignedBigInteger("147483647147483647147483647147483647147483647147483647147483647147483647147483647147483647147483647147483647")
+                % UnsignedBigInteger("14748364714748364711474836471117483647147483647147483647147483647147483647147483647147483647147483647147483647")).toString())
+        repeat(1) {
+            val a = Random.nextInt(0, Int.MAX_VALUE)
+            val b = Random.nextInt(1, Int.MAX_VALUE)
+            val c = a % b
+            val z = 10.0.pow(Random.nextInt(1,16)).toLong().toString()
+            val res = StringBuilder(c.toString()).append("0".repeat(z.length - 1)).toString()
+            println("a = $a \nb = $b \nz = $z \nc = $c \nres = $res \n")
+            assertEquals(c.toString(), (UnsignedBigInteger(a) % UnsignedBigInteger(b)).toString())
+
+        }
     }
 
     @Test
@@ -183,5 +192,10 @@ internal class UnsignedBigIntegerTest {
 
     @Test
     fun toInt() {
+        assertEquals(1, UnsignedBigInteger(1).toInt())
+        assertEquals(1, UnsignedBigInteger("1").toInt())
+        assertEquals(2147483647, UnsignedBigInteger(2147483647).toInt())
+        assertEquals(2147483647, UnsignedBigInteger("2147483647").toInt())
+        assertFailsWith<ArithmeticException> { UnsignedBigInteger("93248499044975392436495").toInt() }
     }
 }
