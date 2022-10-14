@@ -275,7 +275,8 @@ class UnsignedBigInteger : Comparable<UnsignedBigInteger> {
             when (sizeOfList) {
                 1 -> return this.list[0]
                 2 -> {
-                    if (this.list[1] > 2 && this.list[0] > 147483647) throw ArithmeticException() else return this.list[0] * 1000000000 + this.list[1]
+                    if (this.list[0] >= 2 && this.list[1] >= 147483647) throw ArithmeticException()
+                    else return this.list[0] * 1000000000 + this.list[1]
                 }
             }
         }
